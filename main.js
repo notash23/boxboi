@@ -4,49 +4,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
-gsap.from("#NoGame", {
-  opacity: 0,
-  scrollTrigger: {
-    trigger: "#NoGame",
-    pin: true,
-    start: "center 48%",
-    end: "center top",
-    scrub: 1,
-  }
-})
-
-gsap.from("#Just", {
-  opacity: 0,
-  scale: 0,
-  scrollTrigger: {
-    trigger: "#Just",
-    start: "center bottom",
-    end: "center center",
-    scrub: 1,
-  }
-})
-
-gsap.from("#Just", {
-  scrollTrigger: {
-    trigger: "#Just",
-    pin: true,
-    start: "center center",
-    end: "center top",
-    scrub: 1,
-  }
-})
-
-gsap.from("#Out", {
-  opacity: 0,
-  x: "100vh",
-  scrollTrigger: {
-    trigger: "#Out",
-    start: "center 80%",
-    end: "center center",
-    scrub: 0.5
-  }
-})
-
 //Create scene
 const scene = new t.Scene()
 
@@ -105,3 +62,88 @@ const loop = () => {
   window.requestAnimationFrame(loop)
 }
 loop()
+
+const tl = gsap.timeline({
+  scrollTrigger: {
+    trigger: ".fullscreen",
+    pin: true,
+    start: "center 48%",
+    end: "center -200%",
+    scrub: 1,
+  }
+})
+
+tl.set("#NoGame", {
+  opacity: 0.8,
+  scale: 0.75
+})
+
+tl.set("#Just", {
+  opacity: 0,
+  scale: 0.75
+})
+
+tl.to('#NoGame', {
+  duration: 1,
+  opacity:1,
+  scale: 1
+})
+
+tl.to('#NoGame', {duration: 2,
+  opacity:0,
+  scale: 0.5,
+  delay: 1
+})
+
+tl.to('#Just', {
+  duration: 2,
+  opacity:1,
+  scale: 1
+})
+
+tl.to('#Just', {
+  duration: 3,
+  opacity:1 ,
+  scale: 1
+})
+
+const tl1 = gsap.timeline({
+  scrollTrigger: {
+    trigger: ".render",
+    pin: true,
+    start: "top top",
+    end: "bottom -200%",
+    scrub: 0.5,
+  }
+})
+
+
+tl1.set(".webgl", {
+  opacity: 0,
+})
+
+tl1.to('.webgl', {
+  opacity:1,
+})
+
+tl1.to(camera.position, {
+  duration: 2,
+  x: 15,
+  y:-10,
+  z:10
+})
+
+tl1.to('.webgl', {
+  opacity: 0,
+})
+
+gsap.from("#Out", {
+  opacity: 0,
+  x: "100vh",
+  scrollTrigger: {
+    trigger: "#Out",
+    start: "center 80%",
+    end: "center center",
+    scrub: 0.5
+  }
+})

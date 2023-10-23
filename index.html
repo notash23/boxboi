@@ -8,13 +8,14 @@
 </head>
 <body>
   <div class="fullscreen">
-    <h1 id="NoGame">There is no game</h1>
+    <div style="position: relative;">
+      <h1 id="NoGame" style="position: absolute; z-index: 2;">There is no game</h1>
+      <h1 id="Just" style="position: relative; z-index: 1;">Just BoxBoi</h1>
+    </div>
   </div>
-  <div class="fullscreen">
-    <h1 id="Just">Just BoxBoi</h1>
+  <div class="fullscreen render">
+    <canvas class="webgl"></canvas>
   </div>
-  <div class="halfscreen"></div>
-  <canvas class="webgl"></canvas>
   <div class="fullscreen">
     <h1 id="Out">Get out now</h1>
   </div>
