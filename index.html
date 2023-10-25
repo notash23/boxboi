@@ -3,18 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>The Game</title>
+  <link rel="shortcut icon" href="BoxBoi.svg" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="fullscreen">
-    <div style="position: relative;">
-      <h1 id="NoGame" style="position: absolute; z-index: 2;">There is no game</h1>
-      <h1 id="Just" style="position: relative; z-index: 1;">Just BoxBoi</h1>
-    </div>
+    <canvas class="canvas"></canvas>
+    <h1 id="NoGame">There is no game</h1>
+    <h1 id="Just">Just...</h1>
   </div>
   <div class="fullscreen render">
     <canvas class="webgl"></canvas>
+    <div id="endscroll"></div>
   </div>
   <div class="fullscreen">
     <h1 id="Out">Get out now</h1>

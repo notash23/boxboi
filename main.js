@@ -2,6 +2,9 @@ import * as t from 'three'
 import { OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import { gsap } from "gsap";    
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+
+gsap.registerPlugin(ScrollToPlugin);
 gsap.registerPlugin(ScrollTrigger);
 
 //Create scene
@@ -63,48 +66,83 @@ const loop = () => {
 }
 loop()
 
+const particles = document.querySelector(".canvas");
+particles.width = window.innerWidth
+particles.height = window.innerHeight
+
+const context = particles.getContext("2d")
+const frameCount = 180;
+const currentFrame = (index) => `animation/${(index+1).toString()}.jpg`
+let anim = { frame: 0 }
+
+const images = [];
+
+for (let index = 0; index < frameCount; index++) {
+  const img = new Image();
+  img.src = currentFrame(index)
+  images.push(img)
+}
+
+images[0].onload = render;
+
+function render() {
+  context.clearRect(0, 0, particles.width, particles.height);
+  context.drawImage(images[anim.frame], 0, 0);
+}
+
+// gsap.to(window, { 
+//   duration: 15,
+//   scrollTo: {
+//   y: "#endscroll",
+//   // autoKill: true
+// }});
+
 const tl = gsap.timeline({
   scrollTrigger: {
     trigger: ".fullscreen",
     pin: true,
-    start: "center 48%",
-    end: "center -200%",
+    start: "center center",
+    end: "center -1200%",
     scrub: 1,
   }
 })
 
-tl.set("#NoGame", {
-  opacity: 0.8,
-  scale: 0.75
-})
-
 tl.set("#Just", {
   opacity: 0,
-  scale: 0.75
+  scale: 0.6
 })
 
 tl.to('#NoGame', {
-  duration: 1,
-  opacity:1,
-  scale: 1
-})
-
-tl.to('#NoGame', {duration: 2,
+  duration: 2,
   opacity:0,
   scale: 0.5,
-  delay: 1
+  delay: 2
 })
 
 tl.to('#Just', {
   duration: 2,
-  opacity:1,
-  scale: 1
+  opacity: 1,
+  scale: 1,
+  delay: 2,
 })
 
 tl.to('#Just', {
+  duration: 4,
+  opacity: 0,
+  delay: 1.5
+})
+
+tl.to(anim, {
+  duration: 15,
+  frame: frameCount - 1,
+  snap: 'frame',
+  ease: "expoScale(0.5,7,none)",
+  onUpdate: render
+})
+
+tl.to('.canvas', {
   duration: 3,
-  opacity:1 ,
-  scale: 1
+  opacity: 0
 })
 
 const tl1 = gsap.timeline({

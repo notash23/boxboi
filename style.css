@@ -8,7 +8,7 @@ body, html {
 h1 {
   text-align: center;
   font-size: 500%;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
   color: whitesmoke;
@@ -22,4 +22,12 @@ h1 {
   justify-content: center;
   align-items: center;
   background-color: rgb(29, 26, 61);
+}
+.fullscreen * {
+  position: absolute;
+}
+
+canvas {
+  height: 100vh;
+  width: 100vw;
 }
