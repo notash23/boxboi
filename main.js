@@ -116,7 +116,7 @@ tl.to('#NoGame', {
   duration: 2,
   opacity:0,
   scale: 0.5,
-  delay: 2
+  delay: 1
 })
 
 tl.to('#Just', {

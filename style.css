@@ -23,8 +23,13 @@ h1 {
   align-items: center;
   background-color: rgb(29, 26, 61);
 }
+
 .fullscreen * {
   position: absolute;
+}
+
+.fullscreen.relative * {
+  position: relative;
 }
 
 canvas {
