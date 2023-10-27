@@ -24,6 +24,10 @@ h1 {
   background-color: rgb(29, 26, 61);
 }
 
+.fullscreen.vertical {
+  flex-direction: column;
+}
+
 .fullscreen * {
   position: absolute;
 }
@@ -35,4 +39,33 @@ h1 {
 canvas {
   height: 100vh;
   width: 100vw;
+}
+
+.button {
+  background-color: rgba(0, 0, 0, 0.1);
+  border: none;
+  margin: 25px;
+  border-radius: 40px;
+  padding: 18px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+
+.button.heart:hover {
+  background-color: rgba(247, 193, 233, 0.6);;
+}
+
+.button.broken:hover {
+  background-color: rgba(150, 84, 84, 0.6);;
+}
+
+.icon-heart {
+  color: rgb(255, 0, 191);
+  font-size: 250%;
+}
+
+.icon-broken {
+  color: rgb(177, 40, 40);
+  font-size: 250%;
 }

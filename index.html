@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/89dda82a58.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -20,11 +21,15 @@
     <canvas class="webgl"></canvas>
     <div id="endscroll"></div>
   </div>
-  <div class="fullscreen relative">
+  <div class="fullscreen vertical relative">
     <h1 id="Out">Do you like BoxBoi?</h1>
     <div>
-      <button>Yes</button>
-      <button>No</button>
+      <button class="button heart" id="heart">
+        <i class="icon-heart fa-solid fa-heart" id="heart-icon"></i>
+      </button>
+      <button class="button broken" id="broken">
+        <i class="icon-broken fa-solid fa-heart-crack" id="broken-icon"></i>
+      </button>
     </div>
   </div>
   <script type="module" src="/main.js"></script>

@@ -1,22 +1,14 @@
 import * as t from 'three'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
-import { gsap } from "gsap";    
+import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 
+const modelPath = "models/scene.gltf"
+
 gsap.registerPlugin(ScrollToPlugin);
 gsap.registerPlugin(ScrollTrigger);
-
-//Create scene
-const scene = new t.Scene()
-
-//Create Sphere
-const geometry = new t.SphereGeometry(3,64, 64)
-const material =  new t.MeshStandardMaterial({
-  color:"#00ff83",
-})
-const mesh = new t.Mesh(geometry, material)
-scene.add(mesh)
 
 //Sizes
 const sizes = {
@@ -24,28 +16,45 @@ const sizes = {
   height: window.innerHeight,
 }
 
-//Light
-const light  = new t.PointLight(0xffffff, 100, 40)
-light.position.set(0,10,10)
-scene.add(light)
+//Create scene
+const scene = new t.Scene()
 
-//Camera
+// Mixer
+let mixer;
+
+//Add Camera
 const camera = new t.PerspectiveCamera(45, sizes.width/sizes.height, 0.1, 100)
-camera.position.z = 20
-scene.add(camera)
 
-//Renderer
+// Create Renderer
 const canvas = document.querySelector(".webgl")
-const renderer = new t.WebGLRenderer({canvas})
+const renderer = new t.WebGLRenderer({ canvas })
+renderer.toneMapping = t.ACESFilmicToneMapping;
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(2)
-renderer.render(scene, camera)
 
 //Controls
 const controls = new OrbitControls(camera, canvas)
+controls.target.set(-1, 1.2, -0.2)
+controls.maxPolarAngle = 2
 controls.enableDamping = true
 controls.enablePan = false
 controls.enableZoom = false
+
+//Load Model
+const loader = new GLTFLoader();
+loader.load(modelPath, (gltf) => {
+  scene.add(gltf.scene);
+  
+  //Load animation
+  mixer = new t.AnimationMixer(gltf.scene);
+  gltf.animations.forEach((clip)=> {
+    const action = mixer.clipAction(clip);
+    action.play();
+  });
+  console.log("Loaded Model succesfully");
+}, undefined, (error) => {
+  console.error('Error loading JSON scene:', error);
+});
 
 //Resize
 window.addEventListener("resize", ()=>{
@@ -59,7 +68,10 @@ window.addEventListener("resize", ()=>{
   renderer.setSize(sizes.width, sizes.height)
 })
 
+const clock = new t.Clock()
 const loop = () => {
+  if (mixer)
+    mixer.update(clock.getDelta())
   controls.update()
   renderer.render(scene, camera)
   window.requestAnimationFrame(loop)
@@ -103,7 +115,7 @@ const tl = gsap.timeline({
     pin: true,
     start: "center center",
     end: "center -1200%",
-    scrub: 1,
+    scrub: 0.5,
   }
 })
 
@@ -150,8 +162,8 @@ const tl1 = gsap.timeline({
     trigger: ".render",
     pin: true,
     start: "top top",
-    end: "bottom -200%",
-    scrub: 0.5,
+    end: "bottom -1000%",
+    scrub: 0.3,
   }
 })
 
@@ -160,28 +172,84 @@ tl1.set(".webgl", {
   opacity: 0,
 })
 
+tl1.set(camera.position, {
+  x: 4.5,
+  y: 3.75,
+  z: 3.16
+});
+
 tl1.to('.webgl', {
   opacity:1,
 })
 
 tl1.to(camera.position, {
   duration: 2,
-  x: 15,
-  y:-10,
-  z:10
+  x: 0.532,
+  y: 0.772,
+  z: -6.52
+})
+
+tl1.to(camera.position, {
+  duration: 2,
+  x: -6.83,
+  y: 1.98,
+  z: -2.93
+})
+
+tl1.to(camera.position, {
+  duration: 2,
+  x: -5.47,
+  y: 2.64,
+  z: 4.27
 })
 
 tl1.to('.webgl', {
   opacity: 0,
 })
 
-gsap.from("#Out", {
-  opacity: 0,
-  x: "100vh",
+const tl2 = gsap.timeline({
   scrollTrigger: {
     trigger: "#Out",
-    start: "center 80%",
+    start: "center bottom",
     end: "center center",
     scrub: 0.5
   }
+})
+
+tl2.from("#Out", {
+  opacity: 0,
+  x: "100vh",
+})
+
+tl2.from("#heart", {
+  opacity: 0,
+  y: "20vh",
+  delay: 1
+})
+
+tl2.from("#broken", {
+  opacity: 0,
+  y: "20vh",
+})
+
+const heartButton = document.getElementById("heart");
+const brokenButton = document.getElementById("broken");
+
+const heartIcon = document.getElementById("heart-icon");
+const brokenIcon = document.getElementById("broken-icon");
+
+heartButton.addEventListener("mouseover", () => {
+  heartIcon.classList.add('fa-beat')
+})
+
+heartButton.addEventListener("mouseout", () => {
+  heartIcon.classList.remove('fa-beat')
+})
+
+brokenButton.addEventListener("mouseover", () => {
+  brokenIcon.classList.add('fa-shake')
+})
+
+brokenButton.addEventListener("mouseout", () => {
+  brokenIcon.classList.remove('fa-shake')
 })
