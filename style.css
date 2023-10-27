@@ -44,13 +44,12 @@ canvas {
 .button {
   background-color: rgba(0, 0, 0, 0.1);
   border: none;
-  margin: 25px;
+  margin: 48px;
   border-radius: 40px;
   padding: 18px;
   font-size: 16px;
   cursor: pointer;
 }
-
 
 .button.heart:hover {
   background-color: rgba(247, 193, 233, 0.6);;
@@ -66,6 +65,6 @@ canvas {
 }
 
 .icon-broken {
-  color: rgb(177, 40, 40);
+  color: rgb(212, 80, 80);
   font-size: 250%;
 }

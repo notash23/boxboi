@@ -4,6 +4,29 @@ import { OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { initializeApp } from "firebase/app";
+import { getFirestore, doc, updateDoc, increment } from "firebase/firestore";
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAWGdyzHNHu9eZYlGTktYjxXVeFnYBdG_w",
+  authDomain: "boxboi-efc2a.firebaseapp.com",
+  projectId: "boxboi-efc2a",
+  storageBucket: "boxboi-efc2a.appspot.com",
+  messagingSenderId: "690050479175",
+  appId: "1:690050479175:web:9d40d97b5a36bcee86ad62"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app);
+
+const surveyRef = doc(db, "Survey", "survey");
+
+let voted = 0
 
 const modelPath = "models/scene.gltf"
 
@@ -84,7 +107,15 @@ particles.height = window.innerHeight
 
 const context = particles.getContext("2d")
 const frameCount = 180;
-const currentFrame = (index) => `animation/${(index+1).toString()}.jpg`
+
+
+let viewport;
+if (window.matchMedia("(max-width: 600px)").matches) {
+  viewport = 'animation_mobile'
+} else {
+  viewport = 'animation_desktop'
+}
+const currentFrame = (index) => `${viewport}/${(index+1).toString()}.jpg`
 let anim = { frame: 0 }
 
 const images = [];
@@ -99,7 +130,7 @@ images[0].onload = render;
 
 function render() {
   context.clearRect(0, 0, particles.width, particles.height);
-  context.drawImage(images[anim.frame], 0, 0);
+  context.drawImage(images[anim.frame], 0, 0, particles.width, particles.height);
 }
 
 // gsap.to(window, { 
@@ -246,10 +277,46 @@ heartButton.addEventListener("mouseout", () => {
   heartIcon.classList.remove('fa-beat')
 })
 
+heartButton.addEventListener("mouseup", () => {
+  let survey;
+  if (voted<1) {
+    if (voted === -1) {
+      survey = {
+        yes: increment(1),
+        no: increment(-1)
+      }
+    } else {
+      survey = {
+        yes: increment(1)
+      }
+    }
+    voted = 1
+    updateDoc(surveyRef, survey);
+  }
+})
+
 brokenButton.addEventListener("mouseover", () => {
   brokenIcon.classList.add('fa-shake')
 })
 
 brokenButton.addEventListener("mouseout", () => {
   brokenIcon.classList.remove('fa-shake')
+})
+
+brokenButton.addEventListener("mouseup", () => {
+  if (voted>-1) {
+    let survey;
+    if (voted === 1) {
+      survey = {
+        yes: increment(-1),
+        no: increment(1)
+      }
+    } else {
+      survey = {
+        no: increment(1)
+      }
+    }
+    voted = -1
+    updateDoc(surveyRef, survey);
+  }
 })
