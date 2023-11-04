@@ -6,29 +6,47 @@ import { anim, render, frameCount } from "../helpers/image_loader";
 gsap.registerPlugin(ScrollToPlugin);
 gsap.registerPlugin(ScrollTrigger);
 
-const scrollToStart = gsap.to(window, { 
-  duration: 4,
-  delay: 2,
+const fillTo = gsap.quickTo(".progress-fill", "bottom", { duration: 0.3, ease: "power2" })
+const outlineTo = gsap.quickTo(".progress-outline", "stroke-dashoffset", { duration: 0.3, ease: "power2" })
+export const animateLoad = (progress) => { 
+  fillTo(progress * 264 + 35)
+  outlineTo(887 - progress*887)
+}
+
+const startTl = gsap.timeline({
   paused: true,
+})
+
+startTl.to(".progress-outline", {
+  duration: 1,
+  'stroke-dashoffset': -887,
+})
+
+startTl.to(".progress-outline", {
+  duration: 4,
+  delay: 0.5,
+  'stroke-dasharray': 12,
+  'stroke-dashoffset': 887,
+  ease: "power2.out"
+})
+
+startTl.to(window, { 
+  duration: 2,
   scrollTo: {
     y: "#NoGame",
     autoKill: true,
-  }
+  },
+  ease: "expo.inOut"
 })
 
-const dimLoading = gsap.to(".cover", {
+startTl.to(".cover", {
   duration: 2,
-  paused: true,
   backgroundColor: '#000000'
 })
 
 export const animateDone = () => {
-  dimLoading.play()
-  scrollToStart.play()
+  startTl.play()
 }
-
-const xTo = gsap.quickTo(".progress-fill", "bottom", { duration: 0.3, ease: "power2" })
-export const animateLoad = (progress) => { xTo(progress * 264 + 35) }
 
 const tl = gsap.timeline({
   scrollTrigger: {
