@@ -26,10 +26,11 @@ export const setSize = (sizes) => {
   return { camera: camera, renderer: renderer }
 }
 
-export const loadModel = (url, onProgress) => {
-  loadingManager.onProgress = function(url, loaded, total) {
+export const loadModel = (url, onProgress, onLoad) => {
+  loadingManager.onProgress = (url, loaded, total) => {
     onProgress(loaded/total);
   }
+  loadingManager.onLoad = onLoad
   loadingManager.onError = (url) => {
       console.error(`Could not load model from: ${url}`);
   }

@@ -1,17 +1,34 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import { anim, render, frameCount } from "../helpers/image_loader"; 
+import { anim, render, frameCount } from "../helpers/image_loader";
 
 gsap.registerPlugin(ScrollToPlugin);
 gsap.registerPlugin(ScrollTrigger);
 
-// gsap.to(window, { 
-//   duration: 15,
-//   scrollTo: {
-//   y: "#endscroll",
-//   // autoKill: true
-// }});
+const scrollToStart = gsap.to(window, { 
+  duration: 4,
+  delay: 2,
+  paused: true,
+  scrollTo: {
+    y: "#NoGame",
+    autoKill: true,
+  }
+})
+
+const dimLoading = gsap.to(".cover", {
+  duration: 2,
+  paused: true,
+  backgroundColor: '#000000'
+})
+
+export const animateDone = () => {
+  dimLoading.play()
+  scrollToStart.play()
+}
+
+const xTo = gsap.quickTo(".progress-fill", "bottom", { duration: 0.3, ease: "power2" })
+export const animateLoad = (progress) => { xTo(progress * 264 + 35) }
 
 const tl = gsap.timeline({
   scrollTrigger: {

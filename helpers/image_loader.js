@@ -17,10 +17,11 @@ export const anim = { frame: 0 }
 
 export const render = () =>  {
   context.clearRect(0, 0, particles.width, particles.height);
-  context.drawImage(images[anim.frame], 0, 0, particles.width, particles.height);
+  if (images[anim.frame])
+    context.drawImage(images[anim.frame], 0, 0, particles.width, particles.height);
 }
 
-export const loadImages = (onProgress) => {
+export const loadImages = (onProgress, onComplete) => {
     let progress = 0;
     currentFrame(isMobile, 0).then((url) => {
         const img = new Image();
@@ -28,6 +29,10 @@ export const loadImages = (onProgress) => {
         images[0] = img
         progress += 1
         onProgress(progress/frameCount)
+        if (progress == frameCount) {
+          console.log("DONE");
+          onComplete()
+        }
         images[0].onload = render;
     })
     .catch((error) => {
@@ -40,6 +45,9 @@ export const loadImages = (onProgress) => {
             images[index] = img
             progress += 1
             onProgress(progress/frameCount)
+            if (progress === frameCount) {
+              onComplete()
+            }
           })
           .catch((error) => {
             reportError(error)

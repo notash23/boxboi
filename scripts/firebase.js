@@ -25,10 +25,10 @@ const surveyRef = doc(db, "Survey", "survey");
 
 let voted = 0
 
-export const downloadModel = (loadModel, onProgress) => {
+export const downloadModel = (loadModel, onProgress, onLoad) => {
   getDownloadURL(modelRef)
     .then((url) => {
-      loadModel(url, onProgress);
+      loadModel(url, onProgress, onLoad);
     })
     .catch((error) => {
       switch (error.code) {

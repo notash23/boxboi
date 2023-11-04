@@ -2,7 +2,19 @@ body, html {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+body {
   overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+body.scroll {
+  overflow-y: visible;
 }
 
 h1 {
@@ -69,7 +81,6 @@ canvas {
 }
 
 .loading {
-  display: block;
   position: relative;
   background-color: rgb(29, 26, 61);
   height: 100vh;
@@ -78,41 +89,63 @@ canvas {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 1;
 }
 
-svg {
+.masks {
   position: absolute;
-  width: 40%;
-}
-
-.progress-fill {
-  fill: rgb(122, 122, 122);
-  animation: animate 3s infinite ease-in-out;
+  height: 0;
+  width: 0;
 }
 
 .progress-bar {
-  fill: rgb(90, 90, 236);
-  filter: url(#red-glow);
+  position: absolute;
+  height: 50%;
+  aspect-ratio: 1/1;
+  bottom: 240px;
+  background-color: rgb(29, 26, 61);
+  clip-path: url(#mask);
 }
 
-@keyframes animate {
-  0%,100% {
-    clip-path: polygon(5% 51%, 11% 44%, 21% 41%, 30% 43%, 39% 46%, 48% 52%, 56% 55%, 66% 56%, 75% 55%, 84% 52%, 92% 49%, 100% 46%, 100% 0, 0 0, 0 60%);
-  }
-  50% {
-    clip-path: polygon(8% 58%, 16% 62%, 24% 64%, 34% 62%, 43% 59%, 51% 54%, 58% 48%, 65% 44%, 75% 41%, 83% 43%, 91% 48%, 100% 54%, 100% 0, 0 0, 0 53%);
-  }
+.progress-fill {
+  position: absolute;
+  background-color: #00f5d4;
+  bottom: 0px;
+  height: 350px;
+  width: 49vh;
+}
+
+.progress-outline {
+  position: absolute;
+  height: 50%;
+  aspect-ratio: 1/1;
+  bottom: 240px;
+  filter: url(#red-glow);
+  z-index: 1;
+}
+
+.bottom-cover {
+  position: absolute;
+  background-color: rgb(29, 26, 61);
+  bottom: 0;
+  height: 360px;
+  width: 100%;
+}
+
+.cover {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0);
+  height: 100vh;
+  width: 100vw;
 }
 
 label {
   font-family: 'Roboto', sans-serif;
   position: absolute;
-  font-size: 500%;
+  font-size: 7vw;
   top: 75%;
-  color: rgb(202, 202, 202);
-}
-
-.content {
-  display: none;
+  color: #c9ff87;
+  text-shadow:
+  0 0 7px #b3ff56,
+  0 0 42px #89fc00,
+  0 0 82px #9af827;
 }
