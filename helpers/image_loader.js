@@ -1,9 +1,11 @@
-import { currentFrame } from '../scripts/firebase'
+import { getImageZip, reportError } from '../scripts/firebase'
+import { loadAsync } from 'jszip'
 
 let isMobile = false;
 if (window.matchMedia("(max-width: 600px)").matches) {
   isMobile = true
 }
+const urlCreator = window.URL || window.webkitURL;
 
 const particles = document.querySelector(".canvas");
 particles.width = window.innerWidth
@@ -21,53 +23,27 @@ export const render = () =>  {
     context.drawImage(images[anim.frame], 0, 0, particles.width, particles.height);
 }
 
-export const loadImages = (onProgress, onComplete) => {
-    let progress = 0;
-    currentFrame(isMobile, 0).then((url) => {
-        const img = new Image();
-        img.src = url
-        images[0] = img
-        progress += 1
-        onProgress(progress/frameCount)
-        if (progress == frameCount) {
-          console.log("DONE");
-          onComplete()
-        }
-        images[0].onload = render;
+export const loadImagesZip = (onProgress, onComplete) => {
+  getImageZip(isMobile, onProgress, async (blob)=> {
+    const zip = await loadAsync(blob)
+    const img = new Image();
+    zip.file('1.jpg').async('blob').then((blob) => {
+      img.src = urlCreator.createObjectURL(blob);
+      images[0] = img
+      images[0].onload = render;
     })
-    .catch((error) => {
-        reportError(error)
-    });
+    images[0] = img
+    images[0].onload = render;
     for (let index = 1; index < frameCount; index++) {
-        const img = new Image();
-        currentFrame(isMobile, index).then((url) => {
-            img.src = url
-            images[index] = img
-            progress += 1
-            onProgress(progress/frameCount)
-            if (progress === frameCount) {
-              onComplete()
-            }
-          })
-          .catch((error) => {
-            reportError(error)
-          });
+      const img = new Image();
+      zip.file(`${index+1}.jpg`).async('blob').then((blob) => {
+        img.src = urlCreator.createObjectURL(blob);
+        images[index] = img
+      })
     }
-}
-
-function reportError(error) {
-    switch (error.code) {
-        case 'storage/object-not-found':
-          console.log("I cannot find the object. I have the stupid");
-          break;
-        case 'storage/unauthorized':
-          console.log("HEY! You don't have access");
-          break;
-        case 'storage/canceled':
-          console.log("Oops! Download Canceled");
-          break;
-        case 'storage/unknown':
-          console.log("Oops! Unknown Error");
-          break;
-      }   
+    onComplete()
+  })
+  .catch((error) => {
+    reportError(error)
+  });
 }

@@ -16,8 +16,10 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage();
 
-const animation_desktopRef = ref(storage, 'animation_desktop');
-const animation_mobileRef = ref(storage, 'animation_mobile');
+const animation_desktopRef = ref(storage, 'animation_desktop.zip');
+const animation_mobileRef = ref(storage, 'animation_mobile.zip');
+
+const xhr = new XMLHttpRequest();
 
 const modelRef = ref(storage, 'models/scene.gltf');
 
@@ -31,31 +33,28 @@ export const downloadModel = (loadModel, onProgress, onLoad) => {
       loadModel(url, onProgress, onLoad);
     })
     .catch((error) => {
-      switch (error.code) {
-        case 'storage/object-not-found':
-          console.log("I cannot find the object. I have the stupid");
-          break;
-        case 'storage/unauthorized':
-          console.log("HEY! You don't have access");
-          break;
-        case 'storage/canceled':
-          console.log("Oops! Download Canceled");
-          break;
-
-        case 'storage/unknown':
-          console.log("Oops! Unknown Error");
-          break;
-      }
+      reportError(error)
     });
 }
 
-export const currentFrame = async (viewport, index) => {
-  if (viewport === true) {
-    const frameRef = ref(animation_mobileRef, `${(index+1).toString()}.jpg`)
-    return getDownloadURL(frameRef)
-  }
-  const frameRef = ref(animation_desktopRef, `${(index+1).toString()}.jpg`)
-  return getDownloadURL(frameRef)
+export const getImageZip = async (viewport, onProgress, onComplete) => {
+  const url =  viewport? 
+  await getDownloadURL(animation_mobileRef):
+  await getDownloadURL(animation_desktopRef)
+
+  xhr.responseType = 'blob';
+
+  xhr.onprogress = (progress) => {
+    onProgress(progress.loaded/progress.total)
+  };
+
+  xhr.onload = (event) => {
+    const blob = xhr.response;
+    onComplete(blob)
+  };
+
+  xhr.open('GET', url);
+  xhr.send();
 }
 
 export const vote = { voted: voted }
@@ -94,4 +93,21 @@ export const updateHeart = () => {
       voted = -1
       updateDoc(surveyRef, survey);
     }
+  }
+
+  export const reportError = (error) => {
+    switch (error.code) {
+      case 'storage/object-not-found':
+        console.log("I cannot find the object. I have the stupid");
+        break;
+      case 'storage/unauthorized':
+        console.log("HEY! You don't have access");
+        break;
+      case 'storage/canceled':
+        console.log("Oops! Download Canceled");
+        break;
+      case 'storage/unknown':
+        console.log("Oops! Unknown Error");
+        break;
+    }   
   }

@@ -8,6 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const fillTo = gsap.quickTo(".progress-fill", "bottom", { duration: 0.3, ease: "power2" })
 const outlineTo = gsap.quickTo(".progress-outline", "stroke-dashoffset", { duration: 0.3, ease: "power2" })
+
 export const animateLoad = (progress) => { 
   fillTo(progress * 265 + 110)
   outlineTo(887 - progress*887)
@@ -19,6 +20,7 @@ const startTl = gsap.timeline({
 
 startTl.to(".progress-outline", {
   duration: 1,
+  delay: 1.5,
   'stroke-dashoffset': -887,
 })
 
@@ -30,6 +32,11 @@ startTl.to(".progress-outline", {
   ease: "power2.out"
 })
 
+startTl.to(".cover", {
+  duration: 2,
+  backgroundColor: '#000000'
+})
+
 startTl.to(window, { 
   duration: 2,
   scrollTo: {
@@ -39,12 +46,8 @@ startTl.to(window, {
   ease: "expo.inOut"
 })
 
-startTl.to(".cover", {
-  duration: 2,
-  backgroundColor: '#000000'
-})
-
-export const animateDone = () => {
+export const animateDone = (enableScroll) => {
+  startTl.eventCallback("onComplete", enableScroll)
   animateLoad(0)
   startTl.play()
 }
