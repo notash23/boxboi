@@ -88,9 +88,9 @@ canvas {
 }
 
 .progress-bar {
-  height: 50%;
+  height: 460px;
   aspect-ratio: 1/1;
-  bottom: 240px;
+  bottom: 30%;
   background-color: #1d1a3d;
   clip-path: url(#mask);
 }
@@ -98,9 +98,10 @@ canvas {
 .progress-fill {
   background: rgb(47,28,95);
   background: linear-gradient(90deg, rgba(47,28,95,1) 11%, rgba(52,43,142,1) 31%, rgba(56,58,187,1) 49%, rgba(35,115,212,1) 69%, rgba(0,212,255,1) 100%);
-  bottom: 110px;
-  height: 350px;
-  width: 49vh;
+  bottom: 30%;
+  margin-bottom: -121px;
+  height: 345px;
+  width: 460px;
   animation: waves 1.5s ease-in-out infinite;
 }
 
@@ -115,9 +116,9 @@ canvas {
 }
 
 .progress-outline {
-  height: 50%;
   aspect-ratio: 1/1;
-  bottom: 240px;
+  bottom: 30%;
+  margin-bottom: 130px;
   filter: url(#red-glow);
   z-index: 1;
   stroke-dasharray: 887;
@@ -127,14 +128,15 @@ canvas {
 .bottom-cover {
   background-color: #1d1a3d;
   bottom: 0;
-  height: 360px;
+  height: 30%;
+  padding-bottom: 120px;
   width: 100%;
 }
 
 .cover {
   background-color: rgba(0, 0, 0, 0);
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
 }
 
 label {

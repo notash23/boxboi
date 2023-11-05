@@ -6,11 +6,11 @@ import { anim, render, frameCount } from "../helpers/image_loader";
 gsap.registerPlugin(ScrollToPlugin);
 gsap.registerPlugin(ScrollTrigger);
 
-const fillTo = gsap.quickTo(".progress-fill", "bottom", { duration: 0.3, ease: "power2" })
+const fillTo = gsap.quickTo(".progress-fill", "margin-bottom", { duration: 0.3, ease: "power2" })
 const outlineTo = gsap.quickTo(".progress-outline", "stroke-dashoffset", { duration: 0.3, ease: "power2" })
 
 export const animateLoad = (progress) => { 
-  fillTo(progress * 265 + 110)
+  fillTo(progress * 274 - 121)
   outlineTo(887 - progress*887)
 }
 
