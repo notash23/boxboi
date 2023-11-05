@@ -1,6 +1,12 @@
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { getFirestore, doc, updateDoc, increment } from "firebase/firestore";
+
+let voted = 0
+
+export let updateHeart
+export let updateBreak
+export const vote = { voted: voted }
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyAWGdyzHNHu9eZYlGTktYjxXVeFnYBdG_w",
@@ -13,8 +19,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-const db = getFirestore(app);
 const storage = getStorage();
+loadFirestore()
 
 const animation_desktopRef = ref(storage, 'animation_desktop.zip');
 const animation_mobileRef = ref(storage, 'animation_mobile.zip');
@@ -22,10 +28,6 @@ const animation_mobileRef = ref(storage, 'animation_mobile.zip');
 const xhr = new XMLHttpRequest();
 
 const modelRef = ref(storage, 'models/scene.gltf');
-
-const surveyRef = doc(db, "Survey", "survey");
-
-let voted = 0
 
 export const downloadModel = (loadModel, onProgress, onLoad) => {
   getDownloadURL(modelRef)
@@ -57,9 +59,28 @@ export const getImageZip = async (viewport, onProgress, onComplete) => {
   xhr.send();
 }
 
-export const vote = { voted: voted }
+export const reportError = (error) => {
+  switch (error.code) {
+    case 'storage/object-not-found':
+      console.log("I cannot find the object. I have the stupid");
+      break;
+    case 'storage/unauthorized':
+      console.log("HEY! You don't have access");
+      break;
+    case 'storage/canceled':
+      console.log("Oops! Download Canceled");
+      break;
+    case 'storage/unknown':
+      console.log("Oops! Unknown Error");
+      break;
+  }   
+}
 
-export const updateHeart = () => {
+async function loadFirestore() {
+  const { getFirestore, doc, updateDoc, increment } = await import("firebase/firestore")
+  const db = getFirestore(app);
+  const surveyRef = doc(db, "Survey", "survey");
+  updateHeart = () => {
     let survey;
     if (voted<1) {
       if (voted === -1) {
@@ -77,7 +98,7 @@ export const updateHeart = () => {
     }
   }
 
-  export const updateBreak = () => {
+  updateBreak = () => {
     if (voted>-1) {
       let survey;
       if (voted === 1) {
@@ -94,20 +115,4 @@ export const updateHeart = () => {
       updateDoc(surveyRef, survey);
     }
   }
-
-  export const reportError = (error) => {
-    switch (error.code) {
-      case 'storage/object-not-found':
-        console.log("I cannot find the object. I have the stupid");
-        break;
-      case 'storage/unauthorized':
-        console.log("HEY! You don't have access");
-        break;
-      case 'storage/canceled':
-        console.log("Oops! Download Canceled");
-        break;
-      case 'storage/unknown':
-        console.log("Oops! Unknown Error");
-        break;
-    }   
-  }
+}

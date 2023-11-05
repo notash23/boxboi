@@ -1,10 +1,6 @@
-import { sizes, addWindowResize } from './scripts/eventListeners';
+import { animateLoad, animateDone, setCamera } from "./scripts/animations";
 import { downloadModel } from './scripts/firebase';
-import { setSize, loadModel, loop } from "./scripts/three";
-import { setCamera, animateLoad, animateDone } from "./scripts/animations";
 import { loadImagesZip } from './helpers/image_loader';
-
-const three = setSize(sizes)
 
 loadImagesZip(
     (progress) => { animateLoad(progress) },
@@ -15,10 +11,19 @@ loadImagesZip(
     }
 )
 
-setCamera(three.camera)
-addWindowResize(three.camera, three.renderer);
+import3Dtools()
 
-function getModel() {
+async function import3Dtools() {
+    const { setSize } = await import("./scripts/three")
+    const { sizes, addWindowResize } = await import('./scripts/eventListeners')
+
+    const three = setSize(sizes)
+    setCamera(three.camera)
+    addWindowResize(three.camera, three.renderer)
+}
+
+async function getModel() {
+    const { loadModel, loop } = await import("./scripts/three");
     downloadModel(
         loadModel,
         (progress) => { animateLoad(progress) },

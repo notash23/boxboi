@@ -1,32 +1,13 @@
-import * as t from 'three'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { Scene, LoadingManager, AnimationMixer, PerspectiveCamera, WebGLRenderer, ACESFilmicToneMapping, Clock } from 'three'
 
-const scene = new t.Scene()
+const scene = new Scene()
 const canvas = document.querySelector(".webgl")
 let mixer, camera, controls, renderer;
 
-const loadingManager = new t.LoadingManager();
+const loadingManager = new LoadingManager();
 
-export const setSize = (sizes) => {
-  camera = new t.PerspectiveCamera(45, sizes.width/sizes.height, 0.1, 100)
-  renderer = new t.WebGLRenderer({ canvas })
-  renderer.toneMapping = t.ACESFilmicToneMapping;
-  renderer.setSize(sizes.width, sizes.height)
-  renderer.setPixelRatio(2)
-
-  //Controls
-  controls = new OrbitControls(camera, canvas)
-  controls.target.set(-1, 1.2, -0.2)
-  controls.maxPolarAngle = 2
-  controls.enableDamping = true
-  controls.enablePan = false
-  controls.enableZoom = false
-
-  return { camera: camera, renderer: renderer }
-}
-
-export const loadModel = (url, onProgress, onLoad) => {
+export const loadModel = async (url, onProgress, onLoad) => {
+  const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js')
   loadingManager.onProgress = (url, loaded, total) => {
     onProgress(loaded/total);
   }
@@ -38,7 +19,7 @@ export const loadModel = (url, onProgress, onLoad) => {
   loader.load(url, (gltf) => {
     scene.add(gltf.scene);
     
-    mixer = new t.AnimationMixer(gltf.scene);
+    mixer = new AnimationMixer(gltf.scene);
     gltf.animations.forEach((clip)=> {
       const action = mixer.clipAction(clip);
       action.play();
@@ -46,9 +27,30 @@ export const loadModel = (url, onProgress, onLoad) => {
   }, undefined, (error) => {
     console.error('Error loading JSON scene:', error);
   });
-} 
+}
 
-const clock = new t.Clock()
+export const setSize = (sizes) => {
+  camera = new PerspectiveCamera(45, sizes.width/sizes.height, 0.1, 100)
+  renderer = new WebGLRenderer({ canvas })
+  renderer.toneMapping = ACESFilmicToneMapping;
+  renderer.setSize(sizes.width, sizes.height)
+  renderer.setPixelRatio(2)
+  setControls()
+  return { camera: camera, renderer: renderer }
+}
+
+async function setControls() {
+  
+  const { OrbitControls } = await import('three/examples/jsm/controls/OrbitControls')
+  controls = new OrbitControls(camera, canvas)
+  controls.target.set(-1, 1.2, -0.2)
+  controls.maxPolarAngle = 2
+  controls.enableDamping = true
+  controls.enablePan = false
+  controls.enableZoom = false
+}
+
+const clock = new Clock()
 export const loop = () => {
   if (mixer)
     mixer.update(clock.getDelta())
