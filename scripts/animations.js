@@ -54,7 +54,7 @@ export const animateDone = (enableScroll) => {
 
 const tl = gsap.timeline({
   scrollTrigger: {
-    trigger: ".fullscreen",
+    trigger: "#intro",
     pin: true,
     start: "center center",
     end: "center -1200%",
@@ -103,7 +103,7 @@ tl.to('.canvas', {
 export const setCamera = (camera) => {
   const tl1 = gsap.timeline({
     scrollTrigger: {
-      trigger: ".render",
+      trigger: "#render",
       pin: true,
       start: "top top",
       end: "bottom -1000%",

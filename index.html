@@ -46,7 +46,7 @@
   </defs>
 </svg>
 <body id="body">
-  <div class="loading">
+  <div class="fullscreen" id="loading">
     <div class="progress-fill"></div>
     <div class="bottom-cover"></div>
     <div class="progress-bar"></div>
@@ -56,16 +56,16 @@
     <label for="progress-bar" id="load_text">Loading Images...</label>
     <div class="cover"></div>
   </div>
-  <div class="fullscreen">
+  <div class="fullscreen" id="intro">
     <canvas class="canvas"></canvas>
     <h1 id="NoGame">There is no game</h1>
     <h1 id="Just">Just...</h1>
   </div>
-  <div class="fullscreen render">
+  <div class="fullscreen" id="render">
     <canvas class="webgl"></canvas>
     <div id="endscroll"></div>
   </div>
-  <div class="fullscreen vertical relative">
+  <div class="fullscreen vertical relative" id="ending">
     <h1 id="Out">Do you like BoxBoi?</h1>
     <div>
       <button class="button heart" id="heart">
@@ -76,6 +76,6 @@
       </button>
     </div>
   </div>
-  <!-- <script type="module" src="/main.js"></script> -->
+  <script type="module" src="/main.js"></script>
 </body>
 </html>
