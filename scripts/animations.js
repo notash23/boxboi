@@ -9,8 +9,12 @@ gsap.registerPlugin(ScrollTrigger);
 const fillTo = gsap.quickTo(".progress-fill", "margin-bottom", { duration: 0.3, ease: "power2" })
 const outlineTo = gsap.quickTo(".progress-outline", "stroke-dashoffset", { duration: 0.3, ease: "power2" })
 
-export const animateLoad = (progress) => { 
-  fillTo(progress * 274 - 121)
+export const animateLoad = (isMobile, progress) => {
+  if (isMobile) {
+    fillTo(progress * 220 - 153)
+  } else {
+    fillTo(progress * 387 - 182)
+  }
   outlineTo(887 - progress*887)
 }
 
@@ -46,9 +50,9 @@ startTl.to(window, {
   ease: "expo.inOut"
 })
 
-export const animateDone = (enableScroll) => {
+export const animateDone = (isMobile, enableScroll) => {
   startTl.eventCallback("onComplete", enableScroll)
-  animateLoad(0)
+  animateLoad(isMobile, 0)
   startTl.play()
 }
 
@@ -100,7 +104,7 @@ tl.to('.canvas', {
   opacity: 0
 })
 
-export const setCamera = (camera) => {
+export const setModelAnimation = (camera, startRender, stopRender) => {
   const tl1 = gsap.timeline({
     scrollTrigger: {
       trigger: "#render",
@@ -108,6 +112,18 @@ export const setCamera = (camera) => {
       start: "top top",
       end: "bottom -1000%",
       scrub: 0.3,
+      onEnter: () => {
+        startRender()
+      },
+      onEnterBack: () => {
+        startRender()
+      },
+      onLeave: () => {
+        stopRender()
+      },
+      onLeaveBack: () => {
+        stopRender()
+      },
     }
   })
     
@@ -157,8 +173,8 @@ const tl2 = gsap.timeline({
     trigger: "#Out",
     start: "center bottom",
     end: "center center",
-    scrub: 0.5
-  }
+    scrub: 0.5,
+  },
 })
 
 tl2.from("#Out", {

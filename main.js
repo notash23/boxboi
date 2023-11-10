@@ -1,36 +1,32 @@
-import { animateLoad, animateDone, setCamera } from "./scripts/animations";
+import { sizes, addWindowResize } from './scripts/eventListeners';
+import { setModelAnimation, animateLoad, animateDone } from "./scripts/animations";
 import { downloadModel } from './scripts/firebase';
+import { setSize, loadModel, startRender, stopRender } from "./scripts/three";
 import { loadImagesZip } from './helpers/image_loader';
 
+const three = setSize(sizes)
+addWindowResize(three.camera, three.renderer)
+setModelAnimation(three.camera, startRender, stopRender)
+
 loadImagesZip(
-    (progress) => { animateLoad(progress) },
+    sizes.isMobile,
+    (progress) => { animateLoad(sizes.isMobile, progress) },
     () => {
-        animateLoad(0)
+        animateLoad(sizes.isMobile, 0)
         document.getElementById("load_text").innerHTML = "Loading BoxBoi..."
         getModel()
     }
 )
 
-import3Dtools()
-
-async function import3Dtools() {
-    const { setSize } = await import("./scripts/three")
-    const { sizes, addWindowResize } = await import('./scripts/eventListeners')
-
-    const three = setSize(sizes)
-    setCamera(three.camera)
-    addWindowResize(three.camera, three.renderer)
-}
-
-async function getModel() {
-    const { loadModel, loop } = await import("./scripts/three");
+function getModel() {
     downloadModel(
         loadModel,
-        (progress) => { animateLoad(progress) },
+        (progress) => { animateLoad(sizes.isMobile, progress) },
         () => {
             document.getElementById("load_text").innerHTML = "Done Loading!"
-            animateDone(()=>{ document.getElementById("body").classList.add("scroll") })
-            loop()
+            animateDone(sizes.isMobile, ()=>{ 
+                document.getElementById("body").classList.add("scroll");
+            })
         }
     )
 }

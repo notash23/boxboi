@@ -8,28 +8,21 @@ body::-webkit-scrollbar {
   display: none;
 }
 
-body {
+body, .body {
   overflow-x: hidden;
   overflow-y: hidden;
+  background-color: #1d1a3d;
 }
 
 body.scroll {
   overflow-y: visible;
 }
 
-h1 {
-  text-align: center;
-  font-size: 500%;
-  font-family: 'Roboto', sans-serif;
-  margin: 0;
-  padding: 0;
-  color: whitesmoke;
-}
-
 .fullscreen {
   padding: 0;
-  height: 100vh;
-  width: 100vw;
+  margin: 0;
+  height: 100lvh;
+  width: 100lvw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -49,8 +42,8 @@ h1 {
 }
 
 canvas {
-  height: 100vh;
-  width: 100vw;
+  height: 100svh;
+  width: 100svw;
 }
 
 .button {
@@ -87,23 +80,139 @@ canvas {
   width: 0;
 }
 
-.progress-bar {
-  height: 460px;
-  aspect-ratio: 1/1;
-  bottom: 30%;
-  background-color: #1d1a3d;
-  clip-path: url(#mask);
+
+
+@media screen and (max-width: 768px) {
+  h1 {
+    text-align: center;
+    font-size: 4rem;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: whitesmoke;
+  }
+
+  label {
+    font-family: 'Roboto', sans-serif;
+    font-size: 2rem;
+    top: 75%;
+    color: #acaef8;
+    text-shadow:
+    0 0 7px #ad56ff,
+    0 0 42px rgb(178, 214, 255),
+    0 0 82px #3527f8;
+  }
+
+  .progress-bar {
+    height: 375px;
+    aspect-ratio: 1/1;
+    bottom: 30%;
+    background-color: #1d1a3d;
+    clip-path: url(#mask);
+  }
+
+  .progress-fill {
+    background: rgb(47,28,95);
+    background: linear-gradient(90deg, rgba(47,28,95,1) 11%, rgba(52,43,142,1) 31%, rgba(56,58,187,1) 49%, rgba(35,115,212,1) 69%, rgba(0,212,255,1) 100%);
+    bottom: 30%;
+    margin-bottom: -153px;
+    height: 345px;
+    width: 373px;
+    animation: waves 1.5s ease-in-out infinite;
+  }
+
+  .progress-outline {
+    aspect-ratio: 1/1;
+    bottom: 30%;
+    margin-bottom: 100px;
+    filter: url(#red-glow);
+    -webkit-transform: scale(0.94);
+    -moz-transform: scale(0.94);
+    -o-transform: scale(0.94);
+    -ms-transform: scale(0.94);
+    transform: scale(0.94);
+    width: 400px;
+    height: 284px;
+    z-index: 1;
+    stroke-dasharray: 887;
+    stroke-dashoffset: 887;
+  }
+  
+  .bottom-cover {
+    background-color: #1d1a3d;
+    bottom: 0;
+    height: 30%;
+    padding-bottom: 120px;
+    width: 100%;
+  }
 }
 
-.progress-fill {
-  background: rgb(47,28,95);
-  background: linear-gradient(90deg, rgba(47,28,95,1) 11%, rgba(52,43,142,1) 31%, rgba(56,58,187,1) 49%, rgba(35,115,212,1) 69%, rgba(0,212,255,1) 100%);
-  bottom: 30%;
-  margin-bottom: -121px;
-  height: 345px;
-  width: 460px;
-  animation: waves 1.5s ease-in-out infinite;
+@media screen and (min-width: 769px) {
+  h1 {
+    text-align: center;
+    font-size: 6rem;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: whitesmoke;
+  }
+
+  label {
+    font-family: 'Roboto', sans-serif;
+    font-size: 6rem;
+    top: 75%;
+    color: #acaef8;
+    text-shadow:
+    0 0 7px #ad56ff,
+    0 0 42px rgb(178, 214, 255),
+    0 0 82px #3527f8;
+  }
+
+  .progress-bar {
+    height: 650px;
+    aspect-ratio: 1/1;
+    bottom: 5%;
+    background-color: #1d1a3d;
+    clip-path: url(#mask);
+  }
+
+  .progress-fill {
+    background: rgb(47,28,95);
+    background: linear-gradient(90deg, rgba(47,28,95,1) 11%, rgba(52,43,142,1) 31%, rgba(56,58,187,1) 49%, rgba(35,115,212,1) 69%, rgba(0,212,255,1) 100%);
+    bottom: 5%;
+    margin-bottom: -182px;
+    height: 500px;
+    width: 648px;
+    animation: waves 1.5s ease-in-out infinite;
+  }
+
+  .progress-outline {
+    aspect-ratio: 1/1;
+    bottom: 5%;
+    margin-bottom: 100px;
+    filter: url(#red-glow);
+    transform: scale(1.62);
+    -webkit-transform: scale(1.62);
+    -moz-transform: scale(1.62);
+    -o-transform: scale(1.62);
+    -ms-transform: scale(1.62);
+    width: 400px;
+    height: 419px;
+    z-index: 1;
+    stroke-dasharray: 887;
+    stroke-dashoffset: 887;
+  }
+  
+  .bottom-cover {
+    background-color: #1d1a3d;
+    bottom: 0;
+    height: 5%;
+    padding-bottom: 170px;
+    width: 100%;
+  }
 }
+
+
 
 @keyframes waves {
   0%,  100% {
@@ -115,37 +224,8 @@ canvas {
   }
 }
 
-.progress-outline {
-  aspect-ratio: 1/1;
-  bottom: 30%;
-  margin-bottom: 130px;
-  filter: url(#red-glow);
-  z-index: 1;
-  stroke-dasharray: 887;
-  stroke-dashoffset: 887;
-}
-
-.bottom-cover {
-  background-color: #1d1a3d;
-  bottom: 0;
-  height: 30%;
-  padding-bottom: 120px;
-  width: 100%;
-}
-
 .cover {
   background-color: rgba(0, 0, 0, 0);
   height: 100%;
   width: 100%;
-}
-
-label {
-  font-family: 'Roboto', sans-serif;
-  font-size: 6vw;
-  top: 75%;
-  color: #acaef8;
-  text-shadow:
-  0 0 7px #ad56ff,
-  0 0 42px rgb(178, 214, 255),
-  0 0 82px #3527f8;
 }

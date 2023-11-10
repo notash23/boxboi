@@ -1,12 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { getFirestore, doc, updateDoc, increment } from "firebase/firestore"
 
 let voted = 0
-
-export let updateHeart
-export let updateBreak
 export const vote = { voted: voted }
-
 
 const firebaseConfig = {
     apiKey: "AIzaSyAWGdyzHNHu9eZYlGTktYjxXVeFnYBdG_w",
@@ -17,17 +14,18 @@ const firebaseConfig = {
     appId: "1:690050479175:web:9d40d97b5a36bcee86ad62"
 };
 
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig)
 
-const storage = getStorage();
-loadFirestore()
+const storage = getStorage()
+const db = getFirestore(app)
+const surveyRef = doc(db, "Survey", "survey")
 
-const animation_desktopRef = ref(storage, 'animation_desktop.zip');
-const animation_mobileRef = ref(storage, 'animation_mobile.zip');
+const animation_desktopRef = ref(storage, 'animation_desktop.zip')
+const animation_mobileRef = ref(storage, 'animation_mobile.zip')
 
-const xhr = new XMLHttpRequest();
+const xhr = new XMLHttpRequest()
 
-const modelRef = ref(storage, 'models/scene.gltf');
+const modelRef = ref(storage, 'models/scene.glb')
 
 export const downloadModel = (loadModel, onProgress, onLoad) => {
   getDownloadURL(modelRef)
@@ -45,18 +43,54 @@ export const getImageZip = async (viewport, onProgress, onComplete) => {
   await getDownloadURL(animation_desktopRef)
 
   xhr.responseType = 'blob';
+  xhr.open('GET', url, true);
 
   xhr.onprogress = (progress) => {
     onProgress(progress.loaded/progress.total)
   };
 
-  xhr.onload = (event) => {
+  xhr.onload = () => {
     const blob = xhr.response;
     onComplete(blob)
   };
 
-  xhr.open('GET', url);
   xhr.send();
+}
+
+export const updateHeart = () => {
+  let survey;
+  if (voted<1) {
+    if (voted === -1) {
+      survey = {
+        yes: increment(1),
+        no: increment(-1)
+      }
+    } else {
+      survey = {
+        yes: increment(1)
+      }
+    }
+    voted = 1
+    updateDoc(surveyRef, survey);
+  }
+}
+
+export const updateBreak = () => {
+  if (voted>-1) {
+    let survey;
+    if (voted === 1) {
+      survey = {
+        yes: increment(-1),
+        no: increment(1)
+      }
+    } else {
+      survey = {
+        no: increment(1)
+      }
+    }
+    voted = -1
+    updateDoc(surveyRef, survey);
+  }
 }
 
 export const reportError = (error) => {
@@ -68,51 +102,10 @@ export const reportError = (error) => {
       console.log("HEY! You don't have access");
       break;
     case 'storage/canceled':
-      console.log("Oops! Download Canceled");
+      console.log("Oops! Download Cancelled");
       break;
     case 'storage/unknown':
       console.log("Oops! Unknown Error");
       break;
   }   
-}
-
-async function loadFirestore() {
-  const { getFirestore, doc, updateDoc, increment } = await import("firebase/firestore")
-  const db = getFirestore(app);
-  const surveyRef = doc(db, "Survey", "survey");
-  updateHeart = () => {
-    let survey;
-    if (voted<1) {
-      if (voted === -1) {
-        survey = {
-          yes: increment(1),
-          no: increment(-1)
-        }
-      } else {
-        survey = {
-          yes: increment(1)
-        }
-      }
-      voted = 1
-      updateDoc(surveyRef, survey);
-    }
-  }
-
-  updateBreak = () => {
-    if (voted>-1) {
-      let survey;
-      if (voted === 1) {
-        survey = {
-          yes: increment(-1),
-          no: increment(1)
-        }
-      } else {
-        survey = {
-          no: increment(1)
-        }
-      }
-      voted = -1
-      updateDoc(surveyRef, survey);
-    }
-  }
 }

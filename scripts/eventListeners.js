@@ -9,6 +9,7 @@ const brokenIcon = document.getElementById("broken-icon");
 export const sizes = {
     width: window.innerWidth,
     height: window.innerHeight,
+    isMobile: window.matchMedia("(max-width: 768px)").matches
   }
 
 heartButton.addEventListener("mouseover", () => {
@@ -43,6 +44,7 @@ export const addWindowResize = (camera, renderer) => {
     window.addEventListener("resize", ()=>{
         sizes.width = window.innerWidth
         sizes.height = window.innerHeight
+        sizes.isMobile = window.matchMedia("(max-width: 768px)").matches
         
         camera.aspect = sizes.width/sizes.height
         camera.updateProjectionMatrix()
